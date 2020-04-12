@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: A kineis stream from nodanaonlyzuul/kineis-lambda-examples
+Resources:
+  orderInfoKinesisStream:
+    Description: kinesis stream where information goes
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: kinesis-lambda-example-stream
+      RetentionPeriodHours: 24
+      ShardCount: 1
