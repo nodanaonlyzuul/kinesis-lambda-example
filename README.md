@@ -27,6 +27,7 @@ aws cloudformation create-stack \
 --region <region> \
 --profile <profile>
 ```
+
 _This can take a minute to create the stream. View progress in AWS management console._
 
 ### 2: Deploy The Lambda
@@ -40,7 +41,7 @@ $ serverless deploy --region <same region as above> --aws-profile <same profile 
 ```shell
 aws kinesis put-record \
     --stream-name kinesis-lambda-example-stream\
-    --data $(echo "Meow" | base64 ) \
+    --data $(echo "Meow meow" | base64 ) \
     --partition-key foo \
     --region <region> \
     --profile <YOUR AWS PROFILE NAME>
@@ -59,6 +60,23 @@ $ serverless remove --region <region> --aws-profile <profile>
 ```shell
 $ aws cloudformation delete-stack \
 --stack-name kinesis-lambda-example-stream \
---region <region> \
---profile <profile>
+--region us-east-1 \
+--profile personal
 ```
+
+## Running Locally
+
+### On Local Host (FAST!)
+
+    serverless invoke local --docker --function hello --path ./resources/fake-lambda-message.json
+
+### In a Container (Still pretty fast!)
+
+This will package dependencies the same way it would for a release.
+
+    serverless invoke local --docker --function hello --path ./resources/fake-lambda-message.json
+
+This will hang if it throws an exception. The container will stay alive.
+That's good! It allows you to do:
+
+    docker logs -f <container SHA>

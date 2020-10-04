@@ -12,10 +12,17 @@ def hello(event:, context:)
   logger = Ougai::Logger.new(STDOUT)
   logger.info("Lambda invoked", original_event: event)
 
+
   # Let's see what's in the message
   event['Records'].each do |record|
     encoded_message = record['kinesis']['data']
     decoded_message = Base64.decode64(encoded_message)
-    logger.info("What was actually published?", message: decoded_message)
+    logger.info("Raw message string", message: decoded_message)
+    begin
+      message_as_json = JSON.parse(decoded_message)
+      logger.info("Message as JSON", message: message_as_json)
+    rescue Exception => e
+      logger.error("Invalid JSON string", message: decoded_message)
+    end
   end
 end
