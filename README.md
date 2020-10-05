@@ -5,7 +5,7 @@ A demo of deploying a kinesis stream + lambda to AWS, using the
 
 ## Requirements
 
-1.  npm
+1.  npm (tested with v12.18.4)
 2.  docker
 3.  serverless framework (`npm install -g serverless`)
 4.  AWS CLI
@@ -21,11 +21,14 @@ A demo of deploying a kinesis stream + lambda to AWS, using the
 ### 1: Create the Kinesis Stream
 
 ```shell
+export REGION=<REGION NAME>
+export PROFILE=<AWS PROFILE>
+
 aws cloudformation create-stack \
 --stack-name kinesis-lambda-example-stream \
 --template-body file://cloud-formation-templates/kinesis-stream.yml \
---region <region> \
---profile <profile>
+--region $REGION \
+--profile $PROFILE
 ```
 
 _This can take a minute to create the stream. View progress in AWS management console._
@@ -33,7 +36,7 @@ _This can take a minute to create the stream. View progress in AWS management co
 ### 2: Deploy The Lambda
 
 ```shell
-$ serverless deploy --region <same region as above> --aws-profile <same profile as above>
+serverless deploy --region $REGION --aws-profile $PROFILE
 ```
 
 ## Publishing Data to the stream
@@ -41,10 +44,10 @@ $ serverless deploy --region <same region as above> --aws-profile <same profile 
 ```shell
 aws kinesis put-record \
     --stream-name kinesis-lambda-example-stream\
-    --data $(echo "Meow meow" | base64 ) \
+    --data $(echo '{"first_name": "Mister", "last_name": "Whiskers"}' | base64 ) \
     --partition-key foo \
-    --region <region> \
-    --profile <YOUR AWS PROFILE NAME>
+    --region $REGION \
+    --profile $PROFILE
 ```
 
 ## Cleaning up After Yourself
@@ -52,23 +55,23 @@ aws kinesis put-record \
 ### Remove the Lambda
 
 ```shell
-$ serverless remove --region <region> --aws-profile <profile>
+serverless remove --region $REGION --aws-profile $PROFILE
 ```
 
 ### Remove the Stream
 
 ```shell
-$ aws cloudformation delete-stack \
+aws cloudformation delete-stack \
 --stack-name kinesis-lambda-example-stream \
---region us-east-1 \
---profile personal
+--region $REGION \
+--profile $PROFILE
 ```
 
 ## Running Locally
 
 ### On Local Host (FAST!)
 
-    serverless invoke local --docker --function hello --path ./resources/fake-lambda-message.json
+    serverless invoke local --function hello --path ./resources/fake-lambda-message.json
 
 ### In a Container (Still pretty fast!)
 
