@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This repository is **strictly a proof-of-concept** that a lambda, triggered by writes to a kinesis stream and end up inserting data to [SAP HANA](https://en.wikipedia.org/wiki/SAP_HANA). It should be generalized and reorganized for production use.",
   "dependencies": {
-    "serverless-ruby-package": "^1.2.0",
+    "serverless-ruby-package": "^1.4.0",
     "serverless-pseudo-parameters": "^2.5.0"
   },
   "devDependencies": {},
